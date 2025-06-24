@@ -269,9 +269,9 @@ gsap.to(ball, {
   snap: "frame",
   ease: "none",
   scrollTrigger: {
-    scrub: 0.0,
+    scrub: 1.5,
     pin: "canvas",
-    end: () => `+=${window.innerHeight * 2}`, // Reduced scroll length
+    end: () => `+=${window.innerHeight * 4}`, // Increased scroll length for slower scrolling
   },
   onUpdate: () => {
     render();
@@ -745,7 +745,7 @@ const navigateTo = (url) => {
 };
 
 shopNowBtn.addEventListener('click', () => window.open('https://lk.spaceylon.com/pages/sea-veda', '_blank'));
-seavedaBtn.addEventListener('click', () => navigateTo('../FOREST/index.html'));
+seavedaBtn.addEventListener('click', () => navigateTo('../forest/index.html'));
 
 // Handle browser back button
 window.addEventListener('popstate', (event) => {

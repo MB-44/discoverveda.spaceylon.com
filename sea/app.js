@@ -23,7 +23,6 @@ const navigateTo = (url) => {
 
 exploreForestVedaBtn.addEventListener('click', () => navigateTo('index_s2.html'));
 
-// Handle browser back button
 window.addEventListener('popstate', (event) => {
   // Check if there's a previous page to go back to
   if (document.referrer && document.referrer !== window.location.href) {
@@ -243,9 +242,9 @@ gsap.to(ball, {
   snap: "frame",
   ease: "none",
   scrollTrigger: {
-    scrub: 0.0,
+    scrub: 1.5,
     pin: "canvas",
-    end: () => `+=${window.innerHeight * 2}`, // Reduced scroll length
+    end: () => `+=${window.innerHeight * 4}`, // Increased scroll length for slower scrolling
   },
   onUpdate: () => {
     render();
