@@ -1343,3 +1343,51 @@ button:hover ~ .custom-cursor {
   background: rgba(255, 255, 255, 0.1);
   border-color: white;
 }
+
+/* Comprehensive Momentum Scrolling Prevention */
+html, body {
+  -webkit-overflow-scrolling: auto !important;
+  overscroll-behavior: none !important;
+  overscroll-behavior-y: none !important;
+  overscroll-behavior-x: none !important;
+  touch-action: manipulation !important;
+}
+
+/* Disable momentum scrolling on all elements */
+*, *::before, *::after {
+  -webkit-overflow-scrolling: auto !important;
+  overscroll-behavior: none !important;
+  touch-action: manipulation !important;
+}
+
+/* iOS Safari specific momentum scrolling fixes */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    min-height: 100vh;
+    overscroll-behavior: none !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+  
+  /* Disable momentum scrolling on all scrollable elements in iOS */
+  * {
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: none !important;
+  }
+}
+
+/* Additional mobile momentum scrolling fixes */
+@media screen and (max-width: 768px) {
+  html, body {
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: none !important;
+    overscroll-behavior-y: none !important;
+    overscroll-behavior-x: none !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Disable momentum scrolling on all scrollable elements */
+  * {
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: none !important;
+  }
+}

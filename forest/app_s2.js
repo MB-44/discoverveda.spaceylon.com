@@ -239,9 +239,9 @@ gsap.to(ball, {
   snap: "frame",
   ease: "none",
   scrollTrigger: {
-    scrub: 0.0,
+    scrub: 1.5,
     pin: "canvas",
-    end: () => `+=${window.innerHeight * 2}`, // Reduced scroll length
+    end: () => `+=${window.innerHeight * 4}`, // Increased scroll length for slower scrolling
   },
   onUpdate: () => {
     render();
