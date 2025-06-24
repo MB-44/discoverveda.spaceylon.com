@@ -43,6 +43,12 @@ window.addEventListener('load', () => {
   }
 });
 
+function updateBackground() {
+  const isMobile = window.innerWidth <= 768;
+  const bgImage = isMobile ? `./Scene1_MO/${ball.frame + 1}.webp` : `./Scene1_PC${ball.frame + 1}.webp`;
+  document.body.style.backgroundImage = `url('${bgImage}')`;
+}
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -270,17 +276,16 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-// Start the animation loop
 animate();
 
-// Render current frame
 function render() {
   context.canvas.width = images[0].width;
   context.canvas.height = images[0].height;
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(images[ball.frame], 0, 0);
 
-  // Show link button in frames 160-200
+  updateBackground();
+
   if (ball.frame >= 160) {
     linkButtonsContainer.style.display = 'flex';
     linkButtonsContainer.style.opacity = '1';
@@ -294,18 +299,14 @@ function render() {
   }
 }
 
-// Add resize handler to update mobile detection
 window.addEventListener('resize', () => {
   const wasMobile = isMobile;
   isMobile = window.innerWidth <= 768;
   
-  // If mobile state changed, reload the appropriate frames
   if (wasMobile !== isMobile) {
-    // Clear existing images
     images.length = 0;
     loadedImages = 0;
     
-    // Reload frames with same frame count but different folder
     for (let i = 0; i < frameCount; i++) {
       const img = new Image();
       img.src = currentFrame(i);
