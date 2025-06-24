@@ -20,6 +20,14 @@ const loadingBar = document.querySelector('.loading-bar');
 const linkButtonsContainer = document.querySelector('.link-buttons-container');
 const exploreForestVedaBtn = document.getElementById('exploreForestVedaBtn');
 
+// Get references to the floating UI elements
+const floatingScrollBtn = document.getElementById('floatingScrollBtn');
+const floatingScrollLabel = floatingScrollBtn.querySelector('.floating-ui-label');
+const floatingScrollCircle = floatingScrollBtn.querySelector('.floating-ui-scroll-circle');
+
+// Track if we're at the last frame
+let isAtLastFrame = false;
+
 const navigateTo = (url) => {
   gsap.to([canvas, textCanvas, cursorCanvas, linkButtonsContainer], {
     opacity: 0,
@@ -171,6 +179,46 @@ function updateLoadingProgress(percent) {
   loadingBar.style.setProperty('--progress', `${percent}%`);
 }
 
+// Function to update the scroll button based on current frame
+function updateScrollButton() {
+  // Check if we're at or near the last frame (frame 160+ or close to frameCount)
+  if (ball.frame >= frameCount - 10) { // Using frameCount - 10 to trigger slightly before the very end
+    if (!isAtLastFrame) {
+      isAtLastFrame = true;
+      floatingScrollLabel.textContent = 'RESTART JOURNEY';
+      
+      // Rotate the arrow to point up (restart direction)
+      floatingScrollCircle.querySelector('svg').style.transform = 'rotate(180deg)';
+    }
+  } else {
+    if (isAtLastFrame) {
+      isAtLastFrame = false;
+      floatingScrollLabel.textContent = 'SCROLL';
+      
+      // Reset arrow to point down
+      floatingScrollCircle.querySelector('svg').style.transform = 'rotate(0deg)';
+    }
+  }
+}
+
+// Function to restart the journey
+function restartJourney() {
+  // Smooth scroll to top
+  gsap.to(window, {
+    scrollTo: 0,
+    duration: 1.5,
+    ease: "power2.inOut"
+  });
+}
+
+// Add click/touch event listener to the floating scroll button
+floatingScrollBtn.addEventListener('click', () => {
+  if (isAtLastFrame) {
+    restartJourney();
+  }
+  // If not at last frame, do nothing (let normal scrolling work)
+});
+
 // Preload all frames
 for (let i = 0; i < frameCount; i++) {
   const img = new Image();
@@ -249,8 +297,7 @@ gsap.to(ball, {
   scrollTrigger: {
     scrub: 1.5,
     pin: "canvas",
-    end: () => `+=${window.innerHeight * 4}`,
-    refreshPriority: -1,
+    end: () => `+=${window.innerHeight * 4}`, // Increased scroll length for slower scrolling
   },
   onUpdate: () => {
     render();
@@ -284,6 +331,7 @@ function render() {
   context.drawImage(images[ball.frame], 0, 0);
 
   updateBackground();
+  updateScrollButton(); // Add this line to update scroll button
 
   if (ball.frame >= 160) {
     linkButtonsContainer.style.display = 'flex';
