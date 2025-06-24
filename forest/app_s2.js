@@ -1,5 +1,14 @@
-// Prefetch is now handled by prefetch-utils.js
-// Scene-specific initialization can be added here if needed
+function preventRubberBand(e) {
+  const scrollY = window.scrollY;
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const touch = e.touches[0];
+
+  if ((scrollY <= 0 && touch.clientY > touch.screenY) || (scrollY >= maxScroll && touch.clientY < touch.screenY)) {
+    e.preventDefault();
+  }
+}
+
+document.addEventListener('touchmove', preventRubberBand, {passive: false});
 
 const canvas = document.querySelector(".canvas");
 const textCanvas = document.querySelector(".text-canvas");
@@ -269,17 +278,21 @@ function animate() {
 // Start the animation loop
 animate();
 
-// Render current frame
+function updateBackground() {
+  const isMobile = window.innerWidth <= 768;
+  const bgImage = isMobile ? `./Scene2_MO/${ball.frame + 1}.webp` : `./Scene2_PC/${ball.frame + 1}.webp`;
+  document.body.style.backgroundImage = `url('${bgImage}')`;
+}
+
 function render() {
   context.canvas.width = images[0].width;
   context.canvas.height = images[0].height;
   context.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Use held frame if button was completed
   const frameToShow = isFrameHeld ? heldFrame : ball.frame;
   context.drawImage(images[frameToShow], 0, 0);
 
-  // Show link buttons in frames 180-200
+  updateBackground();
+
   if (ball.frame >= 180) {
     linkButtonsContainer.style.display = 'flex';
     linkButtonsContainer.style.opacity = '1';

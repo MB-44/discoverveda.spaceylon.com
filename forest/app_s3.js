@@ -1,10 +1,17 @@
-// Prefetch is now handled by prefetch-utils.js
-// Scene-specific initialization can be added here if needed
+function preventRubberBand(e) {
+  const scrollY = window.scrollY;
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const touch = e.touches[0];
 
-// Add breathing exercise state tracking
+  if ((scrollY <= 0 && touch.clientY > touch.screenY) || (scrollY >= maxScroll && touch.clientY < touch.screenY)) {
+    e.preventDefault();
+  }
+}
+
+document.addEventListener('touchmove', preventRubberBand, {passive: false});
+
 let isBreathingExerciseActive = false;
 
-// Function to update floating UI text based on breathing exercise state
 function updateFloatingUIForBreathing(isActive) {
   isBreathingExerciseActive = isActive;
   window.isBreathingExerciseActive = isActive; // Update global reference
@@ -14,14 +21,12 @@ function updateFloatingUIForBreathing(isActive) {
   }
 }
 
-// Function to skip breathing exercise
 function skipBreathingExercise() {
   if (isBreathingExerciseActive) {
     stopBreathingExercise();
   }
 }
 
-// Make functions globally accessible for floating-ui.js
 window.isBreathingExerciseActive = isBreathingExerciseActive;
 window.skipBreathingExercise = skipBreathingExercise;
 
@@ -317,17 +322,21 @@ function animate() {
 // Start the animation loop
 animate();
 
-// Render current frame
+function updateBackground() {
+  const isMobile = window.innerWidth <= 768;
+  const bgImage = isMobile ? `./Scene1_MO/${ball.frame + 1}.webp` : `./Scene1_PC/${ball.frame + 1}.webp`;
+  document.body.style.backgroundImage = `url('${bgImage}')`;
+}
+
 function render() {
   context.canvas.width = images[0].width;
   context.canvas.height = images[0].height;
   context.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Use held frame if button was completed
   const frameToShow = isFrameHeld ? heldFrame : ball.frame;
   context.drawImage(images[frameToShow], 0, 0);
 
-  // Show first circular button in frames 55-120
+  updateBackground();
+
   if (ball.frame >= 55 && ball.frame <= 120 && !isFrameHeld) {
     circularBtnContainer.style.display = 'block';
     setTimeout(() => {
