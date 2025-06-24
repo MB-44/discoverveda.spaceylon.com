@@ -1,21 +1,14 @@
-let startY = 0;
-document.addEventListener('touchstart', e => {
-  startY = e.touches[0].clientY;
-}, { passive: false });
-
 function preventRubberBand(e) {
-  const currentY = e.touches[0].clientY;
-  const diffY    = currentY - startY;
-  const scrollY  = window.scrollY;
+  const scrollY = window.scrollY;
   const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const touch = e.touches[0];
 
-  if ((scrollY <= 0     && diffY > 0) ||
-      (scrollY >= maxScroll && diffY < 0)) {
+  if ((scrollY <= 0 && touch.clientY > touch.screenY) || (scrollY >= maxScroll && touch.clientY < touch.screenY)) {
     e.preventDefault();
   }
 }
 
-document.addEventListener('touchmove', preventRubberBand, { passive: false });
+document.addEventListener('touchmove', preventRubberBand, {passive: false});
 
 const canvas = document.querySelector(".canvas");
 const textCanvas = document.querySelector(".text-canvas");
