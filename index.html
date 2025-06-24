@@ -18,6 +18,26 @@
   </head>
 
   <body>
+    <!-- Background Video for Desktop -->
+    <video class="bg-video bg-video-desktop" autoplay muted loop playsinline>
+      <source src="main_bg_pc.mp4" type="video/mp4">
+    </video>
+    
+    <!-- Background Video for Mobile -->
+    <video class="bg-video bg-video-mobile" autoplay muted loop playsinline>
+      <source src="main_bg_m.webm" type="video/webm">
+    </video>
+
+    <!-- Dark Overlay for Videos -->
+    <div class="bg-dark-overlay"></div>
+
+    <!-- PNG Overlays -->
+    <div class="bg-overlay bg-overlay-desktop"></div>
+    <div class="bg-overlay bg-overlay-mobile"></div>
+
+    <!-- Canvas for particle effects -->
+    <canvas class="particles-canvas"></canvas>
+    
     <div class="floating-ui-bar">
       <div class="floating-ui-sound" id="floatingSoundBtn">
         <span class="floating-ui-label">SOUND</span>
@@ -32,15 +52,6 @@
     </div>
     
     <div class="hero-section">
-      <div class="tagline">
-        <p class="tagline-main">START YOUR IMMERSIVE WELLNESS JOURNEY</p>
-        <p class="tagline-sub">EXPERIENCE THE POWER OF NATURE, ROOTED IN AYURVEDA, ELEVATED BY INNOVATION.</p>
-      </div>
-
-      <div class="cta-container">
-        <p class="cta-text">Choose the Energy You Seek</p>
-      </div>
-
       <div class="brand-circles">
         <div class="circle-container" id="forest-circle" onclick="navigateToForest()">
           <div class="circle forest-circle"></div>
@@ -61,7 +72,15 @@
       <div class="floating-element floating-4"></div>
     </div>
 
+    <!-- GSAP Library -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js"
+      integrity="sha512-gmwBmiTVER57N3jYS3LinA9eb8aHrJua5iQD7yqYCKa5x6Jjc7VDVaEA0je0Lu0bP9j7tEjV3+1qUm6loO99Kw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="script.js"></script>
     <script src="floating-ui.js"></script>
+    <script src="particles.js"></script>
   </body>
 </html>

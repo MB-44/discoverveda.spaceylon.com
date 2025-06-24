@@ -1,13 +1,13 @@
 /* 1. Custom Trajan Pro Fonts */
 @font-face {
   font-family: 'TrajanPro-Bold';
-  src: url('fonts/TrajanPro-Bold.otf') format('opentype');
+  src: url('fonts/trajan_pro_bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: 'TrajanPro-Regular';
-  src: url('./fonts/TrajanPro-Regular.ttf') format('truetype');
+  src: url('./fonts/trajan_pro_regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
@@ -21,9 +21,98 @@
 
 body {
   font-family: 'TrajanPro-Regular', serif;
-  background: url('background.jpg') center/cover no-repeat fixed;
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Background Video Styles */
+.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.bg-video-desktop {
+  display: block;
+}
+
+.bg-video-mobile {
+  display: none;
+}
+
+/* Mobile responsive background videos */
+@media (max-width: 768px) {
+  .bg-video-desktop {
+    display: none;
+  }
+  
+  .bg-video-mobile {
+    display: block;
+  }
+}
+
+/* Dark Overlay for Background Videos */
+.bg-dark-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* PNG Overlay Styles */
+.bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bg-overlay-desktop {
+  background-image: url('png-pc.png');
+  display: block;
+}
+
+.bg-overlay-mobile {
+  background-image: url('png_m.png');
+  display: none;
+}
+
+/* Mobile responsive PNG overlays */
+@media (max-width: 768px) {
+  .bg-overlay-desktop {
+    display: none;
+  }
+  
+  .bg-overlay-mobile {
+    display: block;
+  }
+}
+
+/* Particles Canvas */
+.particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.9;
 }
 
 /* 3. Hero Section */
@@ -32,8 +121,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 4rem 1.5rem;
+  justify-content: flex-start;
+  padding: 6rem 1.5rem 4rem;
   position: relative;
 }
 
@@ -87,13 +176,19 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4rem;
-  margin-top: 3rem;
+  margin-top: 12rem;
   animation: fadeIn 0.8s ease-out;
 }
 @media (min-width: 1024px) {
   .brand-circles {
     flex-direction: row;
     gap: 8rem;
+    margin-top: 16rem;
+  }
+
+  .circle {
+    width: 15rem;
+    height: 15rem;
   }
 }
 
@@ -169,7 +264,7 @@ body {
   font-family: 'TrajanPro-Regular', serif;
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 400;
-  margin-top: 1.5rem;
+  margin-top: 3rem;
   margin-bottom: 0.5rem;
   color: white;
   text-align: center;
@@ -325,8 +420,6 @@ body {
     font-weight: 100 !important;
   }
 
-
-
 .floating-ui-sound {
   justify-content: flex-end;
 }
@@ -376,7 +469,7 @@ body {
   /* Mobile adjustments for floating UI */
   @media (max-width: 700px) {
     .floating-ui-bar {
-      bottom: 20px;
+      bottom: 60px;
       padding: 0 2vw;
     }
     .floating-ui-bar > div {
@@ -410,13 +503,15 @@ body {
 
 @media (max-width: 640px) {
   .hero-section {
-    padding: 2rem 1rem;
+    padding: 4rem 1rem 2rem;
+    justify-content: flex-start;
   }
   .brand-circles {
     flex-direction: row;
     gap: 2rem;
     overflow-x: auto;
     padding: 0 2rem 2rem;
+    margin-top: 20rem;
   }
   .circle {
     width: 8rem;
@@ -424,6 +519,7 @@ body {
   }
   .circle-title {
     font-size: clamp(1rem, 5vw, 1.5rem);
+    margin-top: 2rem;
   }
   .tagline {
     margin-bottom: 1rem;
@@ -434,14 +530,102 @@ body {
   }
   
   .floating-ui-bar {
-    bottom: 0.5rem;
-    left: 50%;
-    top: auto;
+    bottom: 80px;
+    top: unset;
+    right: 0.5rem;
+  }
+}
 
-    transform: translateX(-50%);
-    right: auto;
+/* Comprehensive Momentum Scrolling Prevention */
+html, body {
+  -webkit-overflow-scrolling: auto !important;
+  overscroll-behavior: none !important;
+  overscroll-behavior-y: none !important;
+  overscroll-behavior-x: none !important;
+  touch-action: manipulation !important;
+}
 
-    width: auto;
-    padding: 0 1rem;
+/* Disable momentum scrolling on all elements */
+*, *::before, *::after {
+  -webkit-overflow-scrolling: auto !important;
+  overscroll-behavior: none !important;
+  touch-action: manipulation !important;
+}
+
+/* iOS Safari specific momentum scrolling fixes */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    min-height: 100vh;
+    overscroll-behavior: none !important;
+    -webkit-overflow-scrolling: auto !important;
+  }
+  
+  * {
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: none !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  html, body {
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: none !important;
+    overscroll-behavior-y: none !important;
+    overscroll-behavior-x: none !important;
+    touch-action: manipulation !important;
+  }
+  
+  * {
+    -webkit-overflow-scrolling: auto !important;
+    overscroll-behavior: none !important;
+  }
+}
+
+@media (max-width: 780px) {
+  .brand-circles {
+    flex-direction: row;
+    gap: 8rem;
+    margin-top: 19rem;  
+  }
+  .brand-circles .circle {
+    width: 14rem;
+    height: 14rem;
+  }
+}
+
+@media (max-width: 830px) {
+  .brand-circles {
+    flex-direction: row;
+    gap: 8rem;
+    margin-top: 23rem;  
+  }
+  .brand-circles .circle {
+    width: 14rem;
+    height: 14rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .brand-circles {
+    flex-direction: row;
+    gap: 5rem;
+    margin-top: 22rem;  
+  }
+  .brand-circles .circle {
+    width: 14rem;
+    height: 14rem;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  .brand-circles {
+    flex-direction: row;
+    gap: 8rem;
+    margin-top: 26rem;  
+  }
+  .brand-circles .circle {
+    width: 14rem;
+    height: 14rem;
   }
 }
