@@ -324,7 +324,7 @@ animate();
 
 function updateBackground() {
   const isMobile = window.innerWidth <= 768;
-  const bgImage = isMobile ? `./Scene1_MO/${ball.frame + 1}.webp` : `./Scene1_PC/${ball.frame + 1}.webp`;
+  const bgImage = isMobile ? `./Scene3_MO/${ball.frame + 1}.webp` : `./Scene3_PC/${ball.frame + 1}.webp`;
   document.body.style.backgroundImage = `url('${bgImage}')`;
 }
 
