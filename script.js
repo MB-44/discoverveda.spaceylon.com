@@ -1,22 +1,17 @@
-// JavaScript for interactive functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Get circle elements and their descriptions
     const forestCircle = document.getElementById('forest-circle');
     const seaCircle = document.getElementById('sea-circle');
     const forestDescription = document.getElementById('forest-description');
     const seaDescription = document.getElementById('sea-description');
     
-    // Debug: Check if elements are found
     console.log('Forest Circle found:', forestCircle);
     console.log('Sea Circle found:', seaCircle);
     
-    // Ensure elements exist before adding event listeners
     if (!forestCircle || !seaCircle) {
         console.error('Circle elements not found!');
         return;
     }
     
-    // Forest Circle Hover Events
     forestCircle.addEventListener('mouseenter', function() {
         forestDescription.classList.add('show');
     });
@@ -25,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         forestDescription.classList.remove('show');
     });
     
-    // Sea Circle Hover Events
     seaCircle.addEventListener('mouseenter', function() {
         seaDescription.classList.add('show');
     });
@@ -34,31 +28,22 @@ document.addEventListener('DOMContentLoaded', function() {
         seaDescription.classList.remove('show');
     });
     
-    // CTA Button Click Event
     const ctaButton = document.querySelector('.cta-button');
     ctaButton.addEventListener('click', function() {
-        // Add a subtle animation on click
         this.style.transform = 'translateY(-2px) scale(0.98)';
         setTimeout(() => {
             this.style.transform = 'translateY(-2px) scale(1)';
         }, 150);
         
-        // You can add more functionality here, such as:
-        // - Scroll to a specific section
-        // - Open a modal
-        // - Navigate to another page
         console.log('Choose the Energy You Seek button clicked!');
     });
     
-    // Add click events to circles for navigation
     forestCircle.addEventListener('click', function(event) {
         event.preventDefault();
         console.log('Forest Veda selected! Navigating to FOREST/index.html');
-        // Add visual feedback
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
             this.style.transform = '';
-            // Navigate to Forest Veda experience
             window.location.href = './forest/index.html';
         }, 150);
     });
@@ -66,16 +51,13 @@ document.addEventListener('DOMContentLoaded', function() {
     seaCircle.addEventListener('click', function(event) {
         event.preventDefault();
         console.log('Sea Veda selected! Navigating to SEA/index.html');
-        // Add visual feedback
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
             this.style.transform = '';
-            // Navigate to Sea Veda experience
             window.location.href = './sea/index.html';
         }, 150);
     });
     
-    // Smooth scroll behavior for any future anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -90,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Optional: Add some additional interactive features
 function addRippleEffect(element) {
     element.addEventListener('click', function(e) {
         const ripple = document.createElement('span');
@@ -112,16 +93,12 @@ function addRippleEffect(element) {
     });
 }
 
-// Add ripple effect to circles (optional enhancement)
 document.addEventListener('DOMContentLoaded', function() {
     const circles = document.querySelectorAll('.circle');
     circles.forEach(circle => {
-        // You can uncomment the line below to add ripple effects
-        // addRippleEffect(circle);
     });
 });
 
-// Fallback navigation functions (called from HTML onclick)
 function navigateToForest() {
     console.log('Navigate to Forest called!');
     window.location.href = './forest/index.html';

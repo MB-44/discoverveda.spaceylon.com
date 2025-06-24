@@ -434,7 +434,14 @@ body {
   }
   
   .floating-ui-bar {
-    top: 0.5rem;
-    right: 0.5rem;
+    bottom: 0.5rem;
+    left: 50%;
+    top: auto;
+
+    transform: translateX(-50%);
+    right: auto;
+
+    width: auto;
+    padding: 0 1rem;
   }
 }
