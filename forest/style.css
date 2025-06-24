@@ -11,20 +11,18 @@ html, body {
   width: 100vw;
   background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%) !important;
   overscroll-behavior: none !important;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
-  /* new */
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-
   font-family: "Lato", sans-serif;
   overflow-x: hidden;
   background-attachment: fixed;
   margin: 0;
   padding: 0;
+  background-attachment: fixed !important;
   -webkit-overflow-scrolling: auto;
   touch-action: manipulation;
 }
