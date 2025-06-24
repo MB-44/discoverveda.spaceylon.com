@@ -1,15 +1,22 @@
+// app.js
+
+// Prevent rubber-band scrolling on touch devices
 function preventRubberBand(e) {
   const scrollY = window.scrollY;
   const maxScroll = document.body.scrollHeight - window.innerHeight;
   const touch = e.touches[0];
 
-  if ((scrollY <= 0 && touch.clientY > touch.screenY) || (scrollY >= maxScroll && touch.clientY < touch.screenY)) {
+  if (
+    (scrollY <= 0 && touch.clientY > touch.screenY) ||
+    (scrollY >= maxScroll && touch.clientY < touch.screenY)
+  ) {
     e.preventDefault();
   }
 }
 
-document.addEventListener('touchmove', preventRubberBand, {passive: false});
+document.addEventListener('touchmove', preventRubberBand, { passive: false });
 
+// Canvas and UI element references
 const canvas = document.querySelector(".canvas");
 const textCanvas = document.querySelector(".text-canvas");
 const cursorCanvas = document.querySelector(".cursor-canvas");
@@ -24,9 +31,14 @@ const linkButtonsContainer = document.querySelector('.link-buttons-container');
 const nextSceneBtn = document.getElementById('nextSceneBtn');
 const restartBtn = document.getElementById('restartBtn');
 
+// Floating scroll button references
+const floatingScrollBtn = document.getElementById('floatingScrollBtn');
+const floatingScrollLabel = floatingScrollBtn.querySelector('.floating-ui-label');
+const floatingScrollCircle = floatingScrollBtn.querySelector('.floating-ui-scroll-circle');
+let isAtLastFrame = false;
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
 const context = canvas.getContext("2d");
 
 // Set up text canvas
@@ -68,7 +80,6 @@ class Particle {
 
 let particles = [];
 const maxParticles = 80;
-
 function createParticles(x, y) {
   for (let i = 0; i < 3; i++) {
     if (particles.length < maxParticles) {
@@ -81,91 +92,50 @@ function updateParticles() {
   for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].update();
     particles[i].draw();
-    
     if (particles[i].life <= 0) {
       particles.splice(i, 1);
     }
   }
 }
 
-// Mouse position tracking
-let mouseX = 0;
-let mouseY = 0;
-let targetX = 0;
-let targetY = 0;
-let currentX = 0;
-let currentY = 0;
-
-// Add mouse move event listener
+// Mouse & touch tracking
+let mouseX = 0, mouseY = 0, currentX = 0, currentY = 0;
 document.addEventListener('mousemove', (e) => {
-  // Calculate mouse position relative to center of screen
   mouseX = (e.clientX - window.innerWidth / 2) * 0.02;
   mouseY = (e.clientY - window.innerHeight / 2) * 0.02;
-  
-  // Create particles at cursor position
   createParticles(e.clientX, e.clientY);
 });
 
-// Add touch event listeners for mobile
 document.addEventListener('touchstart', handleTouch);
 document.addEventListener('touchmove', handleTouch);
-
 function handleTouch(e) {
-  e.preventDefault(); // Prevent default touch behavior
-  
-  // Get touch position
+  e.preventDefault();
   const touch = e.touches[0];
   const touchX = touch.clientX;
   const touchY = touch.clientY;
-  
-  // Calculate position relative to center of screen
   mouseX = (touchX - window.innerWidth / 2) * 0.02;
   mouseY = (touchY - window.innerHeight / 2) * 0.02;
-  
-  // Create particles at touch position
   createParticles(touchX, touchY);
 }
 
-// Detect mobile device
-const isMobile = window.innerWidth <= 768; // Updated to standard mobile breakpoint
-
-// Set frame count
-const frameCount = 200; // Same frame count for both mobile and desktop
-
-// Choose image folder based on device
-const currentFrame = (index) =>
+// Device detection
+let isMobile = window.innerWidth <= 768;
+const frameCount = 200;
+const currentFrame = index =>
   isMobile
-    ? `./Scene2_MO/${(index + 1).toString()}.webp`
-    : `./Scene2_PC/${(index + 1).toString()}.webp`;
+    ? `./Scene2_MO/${index + 1}.webp`
+    : `./Scene2_PC/${index + 1}.webp`;
 
 const images = [];
 let ball = { frame: 0 };
 let loadedImages = 0;
 
-// Add state for frame holding
-let isFrameHeld = false;
-let heldFrame = 0;
-
-let breathingState = 'inhale'; // 'inhale', 'hold', 'exhale'
-let breathingInterval;
-let breathingTimer;
-const BREATHING_DURATION = 36000; // 36 seconds total (3 sets of 12 seconds each)
-const CYCLE_DURATION = 12000; // 12 seconds total (4s inhale + 4s hold + 4s exhale)
-const CIRCUMFERENCE = 534.07; // 2 * PI * 85 (radius)
-
-// Update the loading progress display
-function updateLoadingProgress(percent) {
-  progressText.textContent = `${percent}%`;
-  loadingBar.style.setProperty('--progress', `${percent}%`);
-}
-
-// ForestLoop video loading logic
+// Video loop
 const forestLoopVideo = document.getElementById('forestLoop');
 let videoStarted = false;
-let minimumVideoTime = 3000; // 3 seconds minimum video display
+let minimumVideoTime = 3000;
 let videoStartTime = 0;
 
-// Set video source based on device type
 if (forestLoopVideo) {
   const videoSource = document.createElement('source');
   if (isMobile) {
@@ -176,121 +146,70 @@ if (forestLoopVideo) {
     videoSource.type = 'video/mp4';
   }
   forestLoopVideo.appendChild(videoSource);
-  
-  // Load the video
   forestLoopVideo.load();
-}
-
-// Handle video loading
-if (forestLoopVideo) {
   forestLoopVideo.addEventListener('loadeddata', () => {
-    console.log('ForestLoop video loaded successfully');
     videoStarted = true;
     videoStartTime = Date.now();
   });
 }
 
-// Preload all frames
+// Preload frames
 for (let i = 0; i < frameCount; i++) {
   const img = new Image();
   img.src = currentFrame(i);
-  img.onerror = () => {
-    console.warn(`Failed to load frame ${i + 1}`);
-    loadedImages++;
-    checkLoadingComplete();
-  };
-  img.onload = () => {
-    loadedImages++;
-    checkLoadingComplete();
-  };
+  img.onerror = () => { loadedImages++; checkLoadingComplete(); };
+  img.onload = () => { loadedImages++; checkLoadingComplete(); };
   images.push(img);
 }
 
-// Check if loading is complete and hide loader
+function updateLoadingProgress(percent) {
+  progressText.textContent = `${percent}%`;
+  loadingBar.style.setProperty('--progress', `${percent}%`);
+}
+
 function checkLoadingComplete() {
   if (loadedImages === frameCount) {
-    const elapsedTime = Date.now() - videoStartTime;
-    const remainingTime = Math.max(0, minimumVideoTime - elapsedTime);
-    
+    const elapsed = Date.now() - videoStartTime;
+    const delay = Math.max(0, minimumVideoTime - elapsed);
     setTimeout(() => {
-      // Fade out loader with video
       gsap.to(loader, {
         opacity: 0,
         duration: 0.8,
         ease: "power2.inOut",
         onComplete: () => {
           loader.style.display = "none";
-          // Show floating UI after loader is hidden
           const floatingUI = document.querySelector('.floating-ui-bar');
-          if (floatingUI) {
-            floatingUI.classList.add('show');
-          }
-          
-          // Smooth entry animation for scene elements
-          gsap.fromTo([canvas, textCanvas, cursorCanvas], {
-            opacity: 0
-          }, {
-            opacity: 1,
-            duration: 0.8,
-            ease: "power2.out"
-          });
-          
+          if (floatingUI) floatingUI.classList.add('show');
+          gsap.fromTo(
+            [canvas, textCanvas, cursorCanvas],
+            { opacity: 0 },
+            { opacity: 1, duration: 0.8, ease: "power2.out" }
+          );
           render();
         }
       });
-    }, remainingTime);
+    }, delay);
+  } else {
+    const percent = Math.floor((loadedImages / frameCount) * 100);
+    updateLoadingProgress(percent);
   }
 }
 
-// Scroll animation with GSAP
-gsap.to(ball, {
-  frame: frameCount - 1,
-  snap: "frame",
-  ease: "none",
-  scrollTrigger: {
-    scrub: 1.5,
-    pin: "canvas",
-    end: () => `+=${window.innerHeight * 4}`, // Increased scroll length for slower scrolling
-  },
-  onUpdate: () => {
-    render();
-  },
-});
-
-// Animation loop for smooth parallax and cursor
-function animate() {
-  // Clear cursor canvas
-  cursorContext.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
-  
-  // Update and draw particles
-  updateParticles();
-  
-  // Smooth interpolation for mouse movement with slower speed
-  currentX += (mouseX - currentX) * 0.03;
-  currentY += (mouseY - currentY) * 0.03;
-  
-  // Apply the transform to the text canvas
-  textCanvas.style.transform = `translate(${currentX}px, ${currentY}px)`;
-  
-  requestAnimationFrame(animate);
-}
-
-// Start the animation loop
-animate();
-
+// Background update
 function updateBackground() {
-  const isMobile = window.innerWidth <= 768;
-  const bgImage = isMobile ? `./Scene2_MO/${ball.frame + 1}.webp` : `./Scene2_PC/${ball.frame + 1}.webp`;
-  document.body.style.backgroundImage = `url('${bgImage}')`;
+  const bgImage = isMobile
+    ? `url('./Scene2_MO/${ball.frame + 1}.webp')`
+    : `url('./Scene2_PC/${ball.frame + 1}.webp')`;
+  document.body.style.backgroundImage = bgImage;
 }
 
+// Original render function
 function render() {
   context.canvas.width = images[0].width;
   context.canvas.height = images[0].height;
   context.clearRect(0, 0, canvas.width, canvas.height);
-  const frameToShow = isFrameHeld ? heldFrame : ball.frame;
+  const frameToShow = ball.frame;
   context.drawImage(images[frameToShow], 0, 0);
-
   updateBackground();
 
   if (ball.frame >= 180) {
@@ -299,25 +218,75 @@ function render() {
   } else {
     linkButtonsContainer.style.opacity = '0';
     setTimeout(() => {
-      if (ball.frame < 180) {
-        linkButtonsContainer.style.display = 'none';
-      }
+      if (ball.frame < 180) linkButtonsContainer.style.display = 'none';
     }, 500);
   }
 }
 
-// Add resize handler to update mobile detection
+// Inject scroll-button update into render
+const originalRender = render;
+render = function() {
+  originalRender();
+  updateScrollButton();
+};
+
+// GSAP scroll animation
+gsap.to(ball, {
+  frame: frameCount - 1,
+  snap: "frame",
+  ease: "none",
+  scrollTrigger: {
+    scrub: 1.5,
+    pin: "canvas",
+    end: () => `+=${window.innerHeight * 4}`,
+  },
+  onUpdate: () => {
+    render();
+  },
+});
+
+// Scroll-button controls
+function updateScrollButton() {
+  if (ball.frame >= frameCount - 10) {
+    if (!isAtLastFrame) {
+      isAtLastFrame = true;
+      floatingScrollLabel.textContent = 'RESTART JOURNEY';
+      floatingScrollCircle.querySelector('svg').style.transform = 'rotate(180deg)';
+    }
+  } else {
+    if (isAtLastFrame) {
+      isAtLastFrame = false;
+      floatingScrollLabel.textContent = 'SCROLL';
+      floatingScrollCircle.querySelector('svg').style.transform = 'rotate(0deg)';
+    }
+  }
+}
+
+function restartJourney() {
+  gsap.to(window, {
+    scrollTo: 0,
+    duration: 1.5,
+    ease: "power2.inOut"
+  });
+}
+
+floatingScrollBtn.addEventListener('click', () => {
+  if (isAtLastFrame) restartJourney();
+});
+
+// Resize handler
 window.addEventListener('resize', () => {
   const wasMobile = isMobile;
   isMobile = window.innerWidth <= 768;
-  
-  // If mobile state changed, reload the appropriate frames
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  textCanvas.width = window.innerWidth;
+  textCanvas.height = window.innerHeight;
+  cursorCanvas.width = window.innerWidth;
+  cursorCanvas.height = window.innerHeight;
   if (wasMobile !== isMobile) {
-    // Clear existing images
     images.length = 0;
     loadedImages = 0;
-    
-    // Reload frames with same frame count but different folder
     for (let i = 0; i < frameCount; i++) {
       const img = new Image();
       img.src = currentFrame(i);
@@ -325,47 +294,44 @@ window.addEventListener('resize', () => {
         loadedImages++;
         let percent = Math.floor((loadedImages / frameCount) * 100);
         updateLoadingProgress(percent);
-        
-        if (loadedImages === frameCount) {
-          render();
-        }
+        if (loadedImages === frameCount) render();
       };
       images.push(img);
     }
   }
 });
 
-const navigateTo = (url) => {
-  gsap.to([canvas, textCanvas, cursorCanvas, linkButtonsContainer], {
-    opacity: 0,
-    duration: 0.5,
-    onComplete: () => {
-      window.location.href = url;
-    }
-  });
-};
-
+// Navigation buttons
 nextSceneBtn.addEventListener('click', () => {
   window.open('https://lk.spaceylon.com/pages/forest-veda', '_blank');
 });
-restartBtn.addEventListener('click', () => navigateTo('index_s3.html'));
+restartBtn.addEventListener('click', () => {
+  window.location.href = 'index_s3.html';
+});
 
-// Handle browser back button
+// Browser back handling
 window.addEventListener('popstate', (event) => {
-  // Check if there's a previous page to go back to
   if (document.referrer && document.referrer !== window.location.href) {
-    // Refresh and go back to previous page
     window.location.href = document.referrer;
   } else {
-    // If no referrer, just reload the current page
     window.location.reload();
   }
 });
 
-// Add state to history for back button handling
+// Push initial history state
 window.addEventListener('load', () => {
-  // Only push state if we're not already in a pushed state
   if (!history.state || !history.state.page) {
-    history.pushState({page: 'scene2', timestamp: Date.now()}, '', '');
+    history.pushState({ page: 'scene2', timestamp: Date.now() }, '', '');
   }
 });
+
+// Animation loop
+function animate() {
+  cursorContext.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+  updateParticles();
+  currentX += (mouseX - currentX) * 0.03;
+  currentY += (mouseY - currentY) * 0.03;
+  textCanvas.style.transform = `translate(${currentX}px, ${currentY}px)`;
+  requestAnimationFrame(animate);
+}
+animate();
