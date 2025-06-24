@@ -47,12 +47,19 @@ const linkButtonsContainer = document.querySelector('.link-buttons-container');
 const shopNowBtn = document.getElementById('shopNowBtn');
 const seavedaBtn = document.getElementById('seavedaBtn');
 
+const floatingScrollBtn = document.getElementById('floatingScrollBtn');
+const floatingScrollLabel = floatingScrollBtn.querySelector('.floating-ui-label');
+const floatingScrollCirclee = floatingScrollBtn.querySelector('floating-ui-scroll-circle');
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const context = canvas.getContext("2d");
 
+let isAtLastFrame = false;
+
 // Set up text canvas
+
 textCanvas.width = window.innerWidth;
 textCanvas.height = window.innerHeight;
 const textContext = textCanvas.getContext("2d");
@@ -118,6 +125,44 @@ let targetX = 0;
 let targetY = 0;
 let currentX = 0;
 let currentY = 0;
+
+
+function updateScrollButton() {
+  if (ball.frame >= frameCount - 10) {
+    if (!isAtLastFrame) {
+      isAtLastFrame = true;
+      floatingScrollLabel.textContent = "RESTART JOURNEY";
+
+            floatingScrollCircle.querySelector('svg').style.transform = 'rotate(180deg)';
+    }
+  } else {
+    if (isAtLastFrame) {
+      isAtLastFrame = false;
+      floatingScrollLabel.textContent = "SCROLL";
+      floatingScrollCirclee.querySelector('svg').style.transform = 'rotate(0deg)';
+    }
+  }
+}
+
+function restartJourney() {
+  gsap.to(window, {
+    scrollTo: 0,
+    duration: 1.5,
+    ease: "power2.inOut",
+  });
+}
+
+floatingScrollBtn.addEventListener('click', () => {
+  if (isAtLastFrame){
+    restartJourney();
+  }
+});
+
+const originalRender = render;
+render = function() {
+  originalRender();
+  updateScrollButton();
+}
 
 // Add mouse move event listener
 document.addEventListener('mousemove', (e) => {

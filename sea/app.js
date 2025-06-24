@@ -1,5 +1,17 @@
 // Prefetch is now handled by prefetch-utils.js
 // Scene-specific initialization can be added here if needed
+function preventRubberBand(e) {
+  const scrollY = window.scrollY;
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const touch = e.touches[0];
+
+  if ((scrollY <= 0 && touch.clientY > touch.screenY) || (scrollY >= maxScroll && touch.clientY < touch.screenY)) {
+    e.preventDefault();
+  }
+}
+
+document.addEventListener('touchmove', preventRubberBand, {passive: false});
+
 
 const canvas = document.querySelector(".canvas");
 const textCanvas = document.querySelector(".text-canvas");
@@ -11,6 +23,11 @@ const loadingBar = document.querySelector('.loading-bar');
 const linkButtonsContainer = document.querySelector('.link-buttons-container');
 const exploreForestVedaBtn = document.getElementById('exploreForestVedaBtn');
 
+// Get references to the floating UI elements
+const floatingScrollBtn = document.getElementById('floatingScrollBtn');
+const floatingScrollLabel = floatingScrollBtn.querySelector('.floating-ui-label');
+const floatingScrollCircle = floatingScrollBtn.querySelector('.floating-ui-scroll-circle');
+
 const navigateTo = (url) => {
   gsap.to([canvas, textCanvas, cursorCanvas, linkButtonsContainer], {
     opacity: 0,
@@ -20,6 +37,45 @@ const navigateTo = (url) => {
     }
   });
 };
+
+let isAtLastFrame = false;
+
+function updateScrollButton() {
+  if (ball.frame >= frameCount - 10) {
+    if (!isAtLastFrame) {
+      isAtLastFrame = true;
+      floatingScrollLabel.textContent = "RESTART JOURNEY";
+
+            floatingScrollCircle.querySelector('svg').style.transform = 'rotate(180deg)';
+    }
+  } else {
+    if (isAtLastFrame) {
+      isAtLastFrame = false;
+      floatingScrollLabel.textContent = "SCROLL";
+      floatingScrollCirclee.querySelector('svg').style.transform = 'rotate(0deg)';
+    }
+  }
+}
+
+function restartJourney() {
+  gsap.to(window, {
+    scrollTo: 0,
+    duration: 1.5,
+    ease: "power2.inOut",
+  });
+}
+
+floatingScrollBtn.addEventListener('click', () => {
+  if (isAtLastFrame){
+    restartJourney();
+  }
+});
+
+const originalRender = render;
+render = function() {
+  originalRender();
+  updateScrollButton();
+}
 
 exploreForestVedaBtn.addEventListener('click', () => navigateTo('index_s2.html'));
 
@@ -93,6 +149,12 @@ function createParticles(x, y) {
       particles.push(new Particle(x, y));
     }
   }
+}
+
+function updateBackground() {
+  const isMobile = window.innerWidth <= 768;
+  const bgImage = isMobile ? `./Scene1_MO/${ball.frame + 1}.webp` : `./Scene1_PC/${ball.frame + 1}.webp`;
+  document.body.style.backgroundImage = `url('${bgImage}')`;
 }
 
 function updateParticles() {
@@ -278,6 +340,8 @@ function render() {
   context.canvas.height = images[0].height;
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.drawImage(images[ball.frame], 0, 0);
+
+  updateBackground();
 
   // Show link button in frames 160-200
   if (ball.frame >= 160) {

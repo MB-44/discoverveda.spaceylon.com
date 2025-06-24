@@ -1,5 +1,17 @@
 // Prefetch is now handled by prefetch-utils.js
 // Scene-specific initialization can be added here if needed
+function preventRubberBand(e) {
+  const scrollY = window.scrollY;
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const touch = e.touches[0];
+
+  if ((scrollY <= 0 && touch.clientY > touch.screenY) || (scrollY >= maxScroll && touch.clientY < touch.screenY)) {
+    e.preventDefault();
+  }
+}
+
+document.addEventListener('touchmove', preventRubberBand, {passive: false});
+
 
 // Add breathing exercise state tracking
 let isBreathingExerciseActive = false;
@@ -19,6 +31,43 @@ function skipBreathingExercise() {
   if (isBreathingExerciseActive) {
     stopBreathingExercise();
   }
+}
+
+function updateScrollButton() {
+  if (ball.frame >= frameCount - 10) {
+    if (!isAtLastFrame) {
+      isAtLastFrame = true;
+      floatingScrollLabel.textContent = "RESTART JOURNEY";
+
+            floatingScrollCircle.querySelector('svg').style.transform = 'rotate(180deg)';
+    }
+  } else {
+    if (isAtLastFrame) {
+      isAtLastFrame = false;
+      floatingScrollLabel.textContent = "SCROLL";
+      floatingScrollCirclee.querySelector('svg').style.transform = 'rotate(0deg)';
+    }
+  }
+}
+
+function restartJourney() {
+  gsap.to(window, {
+    scrollTo: 0,
+    duration: 1.5,
+    ease: "power2.inOut",
+  });
+}
+
+floatingScrollBtn.addEventListener('click', () => {
+  if (isAtLastFrame){
+    restartJourney();
+  }
+});
+
+const originalRender = render;
+render = function() {
+  originalRender();
+  updateScrollButton();
 }
 
 // Make functions globally accessible for floating-ui.js
@@ -317,6 +366,13 @@ function animate() {
 // Start the animation loop
 animate();
 
+function updateBackground() {
+  const isMobile = window.innerWidth <= 768;
+  const bgImage = isMobile ? `./Scene3_MO/${ball.frame + 1}.webp` : `./Scene3_PC/${ball.frame + 1}.webp`;
+  document.body.style.backgroundImage = `url('${bgImage}')`;
+}
+
+
 // Render current frame
 function render() {
   context.canvas.width = images[0].width;
@@ -326,6 +382,8 @@ function render() {
   // Use held frame if button was completed
   const frameToShow = isFrameHeld ? heldFrame : ball.frame;
   context.drawImage(images[frameToShow], 0, 0);
+
+  updateBackground();
 
   // Show first circular button in frames 55-120
   if (ball.frame >= 55 && ball.frame <= 120 && !isFrameHeld) {

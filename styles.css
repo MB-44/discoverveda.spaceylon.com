@@ -1,3 +1,4 @@
+/* 1. Custom Trajan Pro Fonts */
 @font-face {
   font-family: 'TrajanPro-Bold';
   src: url('fonts/trajan_pro_bold.otf') format('opentype');
@@ -10,7 +11,20 @@
   font-weight: 400;
   font-style: normal;
 }
+@font-face {
+  font-family: 'GOUDOSI';
+  src: url('fonts/GOUDOSI.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'TrajanPro3Light';
+  src: url('fonts/TrajanPro3Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
 
+/* 2. Reset and Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -24,6 +38,7 @@ body {
   position: relative;
 }
 
+/* Background Video Styles */
 .bg-video {
   position: fixed;
   top: 0;
@@ -42,6 +57,7 @@ body {
   display: none;
 }
 
+/* Mobile responsive background videos */
 @media (max-width: 768px) {
   .bg-video-desktop {
     display: none;
@@ -79,13 +95,13 @@ body {
 }
 
 .bg-overlay-desktop {
-  background-image: url('png-pc.png');
-  display: block;
+  display: none;
+  background-image: none;
 }
 
 .bg-overlay-mobile {
-  background-image: url('png_m.png');
   display: none;
+  background-image: none;
 }
 
 /* Mobile responsive PNG overlays */
@@ -117,9 +133,93 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 6rem 1.5rem 4rem;
+  justify-content: center;
   position: relative;
+  z-index: 2;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  z-index: 2;
+}
+
+.hero-intro {
+  font-size: calc(1.2rem + 4px + 5.3px);
+  font-family: 'GOUDOSI', serif;
+  opacity: 0.85;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  text-transform: none;
+}
+
+.hero-title {
+  font-family: 'TrajanPro3Light', serif;
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.7rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.hero-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+  font-family: 'TrajanPro3Light', serif;
+  text-transform: uppercase;
+}
+
+.divider-line {
+  display: inline-block;
+  width: 60px;
+  height: 1.5px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 2px;
+}
+
+.divider-icon {
+  font-size: 1.1rem;
+  opacity: 0.7;
+  letter-spacing: 0.2em;
+}
+
+.hero-subtitle {
+  font-family: 'GOUDOSI', serif;
+  font-size: calc(1.1rem + 4px + 5.3px);
+  opacity: 0.85;
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+  text-transform: none;
+}
+
+.hero-choose {
+  font-family: 'GOUDOSI', serif;
+  font-size: calc(1.15rem + 4px + 5.3px);
+  letter-spacing: 0.08em;
+  margin-bottom: 2.2rem;
+  font-weight: 500;
+  opacity: 0.95;
+  text-transform: uppercase;
 }
 
 /* 4. Tagline */
@@ -168,23 +268,26 @@ body {
 /* 6. Brand Circles Layout */
 .brand-circles {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 4rem;
-  margin-top: 12rem;
-  animation: fadeIn 0.8s ease-out;
+  margin-top: 0;
+  z-index: 2;
 }
-@media (min-width: 1024px) {
-  .brand-circles {
-    flex-direction: row;
-    gap: 8rem;
-    margin-top: 16rem;
+@media (max-width: 700px) {
+  .hero-content {
+    max-width: 98vw;
+    padding: 0 1vw;
   }
-
-  .circle {
-    width: 15rem;
-    height: 15rem;
+  .hero-title {
+    font-size: clamp(1.3rem, 8vw, 2.2rem);
+  }
+  .hero-subtitle {
+    font-size: 0.98rem;
+  }
+  .brand-circles {
+    gap: 2rem;
   }
 }
 
@@ -260,7 +363,7 @@ body {
   font-family: 'TrajanPro-Regular', serif;
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 400;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
   margin-bottom: 0.5rem;
   color: white;
   text-align: center;
@@ -416,6 +519,8 @@ body {
     font-weight: 100 !important;
   }
 
+
+
 .floating-ui-sound {
   justify-content: flex-end;
 }
@@ -499,15 +604,13 @@ body {
 
 @media (max-width: 640px) {
   .hero-section {
-    padding: 4rem 1rem 2rem;
-    justify-content: flex-start;
+    padding: 2rem 1rem;
   }
   .brand-circles {
     flex-direction: row;
     gap: 2rem;
     overflow-x: auto;
     padding: 0 2rem 2rem;
-    margin-top: 20rem;
   }
   .circle {
     width: 8rem;
@@ -515,7 +618,6 @@ body {
   }
   .circle-title {
     font-size: clamp(1rem, 5vw, 1.5rem);
-    margin-top: 2rem;
   }
   .tagline {
     margin-bottom: 1rem;
@@ -556,12 +658,14 @@ html, body {
     -webkit-overflow-scrolling: auto !important;
   }
   
+  /* Disable momentum scrolling on all scrollable elements in iOS */
   * {
     -webkit-overflow-scrolling: auto !important;
     overscroll-behavior: none !important;
   }
 }
 
+/* Additional mobile momentum scrolling fixes */
 @media screen and (max-width: 768px) {
   html, body {
     -webkit-overflow-scrolling: auto !important;
@@ -571,57 +675,9 @@ html, body {
     touch-action: manipulation !important;
   }
   
+  /* Disable momentum scrolling on all scrollable elements */
   * {
     -webkit-overflow-scrolling: auto !important;
     overscroll-behavior: none !important;
-  }
-}
-
-@media (max-width: 780px) {
-  .brand-circles {
-    flex-direction: row;
-    gap: 8rem;
-    margin-top: 19rem;  
-  }
-  .brand-circles .circle {
-    width: 14rem;
-    height: 14rem;
-  }
-}
-
-@media (max-width: 830px) {
-  .brand-circles {
-    flex-direction: row;
-    gap: 8rem;
-    margin-top: 23rem;  
-  }
-  .brand-circles .circle {
-    width: 14rem;
-    height: 14rem;
-  }
-}
-
-@media (max-width: 1024px) {
-  .brand-circles {
-    flex-direction: row;
-    gap: 5rem;
-    margin-top: 22rem;  
-  }
-  .brand-circles .circle {
-    width: 14rem;
-    height: 14rem;
-  }
-}
-
-
-@media (min-width: 1024px) {
-  .brand-circles {
-    flex-direction: row;
-    gap: 8rem;
-    margin-top: 26rem;  
-  }
-  .brand-circles .circle {
-    width: 14rem;
-    height: 14rem;
   }
 }
