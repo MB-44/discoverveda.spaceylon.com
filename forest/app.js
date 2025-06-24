@@ -1,5 +1,14 @@
-// Prefetch is now handled by prefetch-utils.js
-// Scene-specific initialization can be added here if needed
+function preventRubberBand(e) {
+  const scrollY = window.scrollY;
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const touch = e.touches[0];
+
+  if ((scrollY <= 0 && touch.clientY > touch.screenY) || (scrollY >= maxScroll && touch.clientY < touch.screenY)) {
+    e.preventDefault();
+  }
+}
+
+document.addEventListener('touchmove', preventRubberBand, {passive: false});
 
 const canvas = document.querySelector(".canvas");
 const textCanvas = document.querySelector(".text-canvas");
@@ -23,21 +32,15 @@ const navigateTo = (url) => {
 
 exploreForestVedaBtn.addEventListener('click', () => navigateTo('index_s2.html'));
 
-// Handle browser back button
 window.addEventListener('popstate', (event) => {
-  // Check if there's a previous page to go back to
   if (document.referrer && document.referrer !== window.location.href) {
-    // Refresh and go back to previous page
     window.location.href = document.referrer;
   } else {
-    // If no referrer, just reload the current page
     window.location.reload();
   }
 });
 
-// Add state to history for back button handling
 window.addEventListener('load', () => {
-  // Only push state if we're not already in a pushed state
   if (!history.state || !history.state.page) {
     history.pushState({page: 'scene1', timestamp: Date.now()}, '', '');
   }
@@ -54,17 +57,14 @@ canvas.height = window.innerHeight;
 
 const context = canvas.getContext("2d");
 
-// Set up text canvas
 textCanvas.width = window.innerWidth;
 textCanvas.height = window.innerHeight;
 const textContext = textCanvas.getContext("2d");
 
-// Set up cursor canvas
 cursorCanvas.width = window.innerWidth;
 cursorCanvas.height = window.innerHeight;
 const cursorContext = cursorCanvas.getContext("2d");
 
-// Particle system for cursor
 class Particle {
   constructor(x, y) {
     this.x = x;
@@ -113,7 +113,6 @@ function updateParticles() {
   }
 }
 
-// Mouse position tracking
 let mouseX = 0;
 let mouseY = 0;
 let targetX = 0;
@@ -121,7 +120,6 @@ let targetY = 0;
 let currentX = 0;
 let currentY = 0;
 
-// Add mouse move event listener
 document.addEventListener('mousemove', (e) => {
   // Calculate mouse position relative to center of screen
   mouseX = (e.clientX - window.innerWidth / 2) * 0.02;
