@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DiscoverVeda</title>
+    <meta name="description" content="Begin your immersive wellness journey where scent, science, and serenity align" />
+    <meta name="author" content="VEDA Wellness" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/gjx4hbr.css">
+
+    <!-- Your styles -->
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <div class="floating-ui-bar">
+      <div class="floating-ui-sound" id="floatingSoundBtn">
+        <span class="floating-ui-label">SOUND</span>
+        <span class="sound-bars" id="soundBars">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </span>
+      </div>
+    </div>
+    
+    <div class="hero-section">
+      <div class="tagline">
+        <p class="tagline-main">START YOUR IMMERSIVE WELLNESS JOURNEY</p>
+        <p class="tagline-sub">EXPERIENCE THE POWER OF NATURE, ROOTED IN AYURVEDA, ELEVATED BY INNOVATION.</p>
+      </div>
+
+      <div class="cta-container">
+        <p class="cta-text">Choose the Energy You Seek</p>
+      </div>
+
+      <div class="brand-circles">
+        <div class="circle-container" id="forest-circle" onclick="navigateToForest()">
+          <div class="circle forest-circle"></div>
+          <h2 class="circle-title">ForestVeda</h2>
+          <!-- <div class="click-hint">Click to explore</div> -->
+        </div>
+
+        <div class="circle-container" id="sea-circle" onclick="navigateToSea()">
+          <div class="circle sea-circle"></div>
+          <h2 class="circle-title">SeaVeda</h2>
+          <!-- <div class="click-hint">Click to explore</div> -->
+        </div>
+      </div>
+
+      <div class="floating-element floating-1"></div>
+      <div class="floating-element floating-2"></div>
+      <div class="floating-element floating-3"></div>
+      <div class="floating-element floating-4"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="floating-ui.js"></script>
+  </body>
+</html>
