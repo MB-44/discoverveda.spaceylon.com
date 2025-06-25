@@ -403,7 +403,7 @@ function render() {
   } else {
     linkButtonsContainer.style.opacity = '0';
     setTimeout(() => {
-      if (ball.frame < 180) {
+      if (ball.frame < 197) {
         linkButtonsContainer.style.display = 'none';
       }
     }, 500);
@@ -799,7 +799,7 @@ const navigateTo = (url) => {
 };
 
 shopNowBtn.addEventListener('click', () => window.open('https://lk.spaceylon.com/pages/forest-veda', '_blank'));
-seavedaBtn.addEventListener('click', () => navigateTo('../SEA/index.html'));
+seavedaBtn.addEventListener('click', () => navigateTo('../sea/index.html'));
 
 // Handle browser back button
 window.addEventListener('popstate', (event) => {

@@ -350,7 +350,7 @@ function render() {
   } else {
     linkButtonsContainer.style.opacity = '0';
     setTimeout(() => {
-      if (ball.frame < 160) {
+      if (ball.frame < 197) {
         linkButtonsContainer.style.display = 'none';
       }
     }, 500);

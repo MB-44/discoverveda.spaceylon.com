@@ -1394,3 +1394,27 @@ html, body {
     overscroll-behavior: none !important;
   }
 }
+
+#floatingScrollBtn {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  /* Add these additional styles for better visibility and centering */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.floating-ui-scroll-circle {
+  margin-top: 8px; /* Space between label and circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
